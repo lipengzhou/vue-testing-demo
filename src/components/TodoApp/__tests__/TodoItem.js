@@ -29,4 +29,22 @@ describe('TodoItem.vue', () => {
     await done.setChecked(false)
     expect(todoItem.classes('completed')).toBeFalsy()
   })
+
+  test('delete todo', async () => {
+    const deleteBtn = wrapper.find('button[data-testid="delete"]')
+    await deleteBtn.trigger('click')
+    expect(wrapper.emitted()['delete-todo']).toBeTruthy()
+    expect(wrapper.emitted()['delete-todo'][0][0]).toBe(wrapper.vm.todo.id)
+  })
+
+  test('edit todo', async () => {
+    const label = wrapper.find('label[data-testid="todo-text"]')
+    const todoItem = wrapper.find('li[data-testid="todo-item"]')
+    const todoEdit = wrapper.find('input[data-testid="todo-edit"]')
+    await label.trigger('dblclick')
+    expect(todoItem.classes()).toContain('editing')
+
+    await todoEdit.trigger('blur')
+    expect(todoItem.classes('editing')).toBeFalsy()
+  })
 })

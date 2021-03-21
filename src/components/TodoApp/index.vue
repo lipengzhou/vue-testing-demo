@@ -12,6 +12,7 @@
           v-for="todo in todos"
           :key="todo.id"
           :todo="todo"
+          @delete-todo="handleDelteTodo"
         />
       </ul>
     </section>
@@ -45,6 +46,12 @@ export default {
         text,
         done: false
       })
+    },
+    handleDelteTodo (todoId) {
+      const index = this.todos.findIndex(t => t.id === todoId)
+      if (index !== -1) {
+        this.todos.splice(index, 1)
+      }
     }
   }
 }

@@ -4,6 +4,21 @@ import TodoItem from '@/components/TodoApp/TodoItem.vue'
 // import Vue from 'vue'
 
 describe('TodoApp.vue', () => {
+  /** @type {import('@vue/test-utils').Wrapper} */
+  let wrapper = null
+
+  beforeEach(async () => {
+    wrapper = shallowMount(TodoApp)
+    const todos = [
+      { id: 1, text: 'eat', done: false },
+      { id: 2, text: 'play', done: true },
+      { id: 3, text: 'sleep', done: false }
+    ]
+    await wrapper.setData({
+      todos
+    })
+  })
+
   test('New todo', async () => {
     const wrapper = shallowMount(TodoApp)
     const text = 'play'
@@ -13,21 +28,18 @@ describe('TodoApp.vue', () => {
   })
 
   test('Todo List', async () => {
-    const wrapper = shallowMount(TodoApp)
-    const todos = [
-      { id: 1, text: 'eat', done: false },
-      { id: 2, text: 'play', done: true },
-      { id: 3, text: 'sleep', done: false }
-    ]
-    await wrapper.setData({
-      todos
-    })
-    expect(wrapper.findAllComponents(TodoItem).length).toBe(todos.length)
-    // wrapper.vm.todos = [
-    //   { id: 1, text: 'eat', done: false },
-    //   { id: 2, text: 'play', done: true },
-    //   { id: 3, text: 'sleep', done: false }
-    // ]
-    // await Vue.nextTick()
+    expect(wrapper.findAllComponents(TodoItem).length).toBe(wrapper.vm.todos.length)
+  })
+
+  test('Delete Todo', async () => {
+    await wrapper.vm.handleDelteTodo(1)
+    expect(wrapper.vm.todos.length).toBe(2)
+    expect(wrapper.findAllComponents(TodoItem).length).toBe(2)
+  })
+
+  test('Delete Todo', async () => {
+    await wrapper.vm.handleDelteTodo(123)
+    expect(wrapper.vm.todos.length).toBe(3)
+    expect(wrapper.findAllComponents(TodoItem).length).toBe(3)
   })
 })

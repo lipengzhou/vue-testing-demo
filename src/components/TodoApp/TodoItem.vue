@@ -1,13 +1,26 @@
 <template>
   <li data-testid="todo-item" :class="{
-    completed: todo.done
+    completed: todo.done,
+    editing: isEditing
   }">
     <div class="view">
       <input v-model="todo.done" data-testid="todo-done" class="toggle" type="checkbox" />
-      <label data-testid="todo-text">{{ todo.text }}</label>
-      <button class="destroy"></button>
+      <label
+        data-testid="todo-text"
+        @dblclick="isEditing = true"
+      >{{ todo.text }}</label>
+      <button
+        data-testid="delete"
+        class="destroy"
+        @click="$emit('delete-todo', todo.id)"
+      ></button>
     </div>
-    <input class="edit" value="Rule the web" />
+    <input
+      class="edit"
+      value="Rule the web"
+      data-testid="todo-edit"
+      @blur="isEditing = false"
+    />
   </li>
 </template>
 
@@ -18,6 +31,11 @@ export default {
     todo: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      isEditing: false
     }
   }
 }
