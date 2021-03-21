@@ -1,8 +1,10 @@
 <template>
-  <li>
+  <li data-testid="todo-item" :class="{
+    completed: todo.done
+  }">
     <div class="view">
-      <input class="toggle" type="checkbox" />
-      <label>Buy a unicorn</label>
+      <input v-model="todo.done" data-testid="todo-done" class="toggle" type="checkbox" />
+      <label data-testid="todo-text">{{ todo.text }}</label>
       <button class="destroy"></button>
     </div>
     <input class="edit" value="Rule the web" />
@@ -11,6 +13,12 @@
 
 <script>
 export default {
-  name: 'TodoItem'
+  name: 'TodoItem',
+  props: {
+    todo: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>
