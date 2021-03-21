@@ -1,5 +1,12 @@
 <template>
   <div class="hello">
+    <Foo/>
+    <button @click="count += 1">Click</button>
+    <button
+      @click="$emit('hello', 123)"
+      data-testid="btn2"
+    >测试</button>
+    <p data-testid="count-text">{{ count }}</p>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
@@ -34,10 +41,20 @@
 </template>
 
 <script>
+import Foo from './Foo'
+
 export default {
   name: 'HelloWorld',
+  components: {
+    Foo
+  },
   props: {
     msg: String
+  },
+  data () {
+    return {
+      count: 0
+    }
   }
 }
 </script>
