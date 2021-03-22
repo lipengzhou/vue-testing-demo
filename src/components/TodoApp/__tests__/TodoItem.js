@@ -37,7 +37,7 @@ describe('TodoItem.vue', () => {
     expect(wrapper.emitted()['delete-todo'][0][0]).toBe(wrapper.vm.todo.id)
   })
 
-  test('edit todo', async () => {
+  test('edit todo style', async () => {
     const label = wrapper.find('label[data-testid="todo-text"]')
     const todoItem = wrapper.find('li[data-testid="todo-item"]')
     const todoEdit = wrapper.find('input[data-testid="todo-edit"]')
@@ -46,5 +46,36 @@ describe('TodoItem.vue', () => {
 
     await todoEdit.trigger('blur')
     expect(todoItem.classes('editing')).toBeFalsy()
+  })
+
+  test('save edit todo', async () => {
+    const label = wrapper.find('label[data-testid="todo-text"]')
+    const todoEdit = wrapper.find('input[data-testid="todo-edit"]')
+    await label.trigger('dblclick')
+
+    // 编辑文本框中的内容展示
+    expect(todoEdit.element.value).toBe(wrapper.vm.todo.text)
+
+    // 修改文本框的值
+    const text = 'hello'
+    await todoEdit.setValue(text)
+
+    // 触发回车保存事件
+    await todoEdit.trigger('keyup.enter')
+
+    // 断言数据被修改了
+    // expect(wrapper.vm.todo.text).toBe(text)
+    expect(wrapper.emitted()['edit-todo']).toBeTruthy()
+    expect(wrapper.emitted()['edit-todo'][0][0]).toEqual({
+      id: wrapper.vm.todo.id,
+      text
+    })
+    expect(wrapper.vm.isEditing).toBeFalsy()
+  })
+
+  test('cancel edit todo', () => {
+  })
+
+  test('delete edit todo', () => {
   })
 })

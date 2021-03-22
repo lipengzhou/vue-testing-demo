@@ -13,6 +13,7 @@
           :key="todo.id"
           :todo="todo"
           @delete-todo="handleDelteTodo"
+          @edit-todo="handleEditTodo"
         />
       </ul>
     </section>
@@ -52,6 +53,18 @@ export default {
       if (index !== -1) {
         this.todos.splice(index, 1)
       }
+    },
+    handleEditTodo ({ id, text }) {
+      const todo = this.todos.find(t => t.id === id)
+      if (!todo) {
+        return
+      }
+      if (!text.trim().length) {
+        // 执行删除操作
+        return this.handleDelteTodo(id)
+      }
+      // 执行修改操作
+      todo.text = text
     }
   }
 }

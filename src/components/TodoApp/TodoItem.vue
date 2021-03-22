@@ -16,10 +16,12 @@
       ></button>
     </div>
     <input
+      :value="todo.text"
+      v-focus="isEditing"
       class="edit"
-      value="Rule the web"
       data-testid="todo-edit"
       @blur="isEditing = false"
+      @keyup.enter="handleEditTodo"
     />
   </li>
 </template>
@@ -33,9 +35,26 @@ export default {
       required: true
     }
   },
+  directives: {
+    focus (element, binding) {
+      if (binding.value) {
+        element.focus()
+      }
+    }
+  },
   data () {
     return {
       isEditing: false
+    }
+  },
+  methods: {
+    handleEditTodo (e) {
+      this.$emit('edit-todo', {
+        id: this.todo.id,
+        text: e.target.value
+      })
+      // 取消编辑状态
+      this.isEditing = false
     }
   }
 }

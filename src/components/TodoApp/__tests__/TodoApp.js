@@ -42,4 +42,14 @@ describe('TodoApp.vue', () => {
     expect(wrapper.vm.todos.length).toBe(3)
     expect(wrapper.findAllComponents(TodoItem).length).toBe(3)
   })
+
+  test('Edit Todo', async () => {
+    const todo = { id: 2, text: 'abc' }
+    await wrapper.vm.handleEditTodo(todo)
+    expect(wrapper.vm.todos[1].text).toBe(todo.text)
+
+    todo.text = ''
+    await wrapper.vm.handleEditTodo(todo)
+    expect(wrapper.vm.todos.find(t => t.id === todo.id)).toBeFalsy()
+  })
 })
