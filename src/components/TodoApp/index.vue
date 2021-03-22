@@ -3,7 +3,13 @@
     <TodoHeader @new-todo="handleNewTodo"/>
     <!-- This section should be hidden by default and shown when there are todos -->
     <section class="main">
-      <input id="toggle-all" class="toggle-all" type="checkbox" />
+      <input
+        v-model="toggleAll"
+        data-testid="toggle-all"
+        id="toggle-all"
+        class="toggle-all"
+        type="checkbox"
+      />
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <!-- These are here just to show the structure of the list items -->
@@ -37,6 +43,19 @@ export default {
   data () {
     return {
       todos: []
+    }
+  },
+  computed: {
+    toggleAll: {
+      get () {
+        // 设置 toggleALl 的选中状态
+        return this.todos.length && this.todos.every(t => t.done)
+      },
+      set (checked) {
+        this.todos.forEach(todo => {
+          todo.done = checked
+        })
+      }
     }
   },
   methods: {
