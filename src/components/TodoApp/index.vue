@@ -65,11 +65,11 @@ export default {
     filterTodos () {
       // 获取路由路径
       const path = this.$route.path
-      let todos = this.todos
       // 根据路由路径过滤数据
       // / 所有的任务列表
       // /active 所有的未完成任务
       // /completed 所有的已完成任务
+      let todos = this.todos
       switch (path) {
         case '/active':
           todos = this.todos.filter(t => !t.done)

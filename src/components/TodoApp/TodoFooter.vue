@@ -8,13 +8,16 @@
     <!-- Remove this if you don't implement routing -->
     <ul class="filters">
       <li>
-        <a class="selected" href="#/">All</a>
+        <!-- <a class="selected" href="#/">All</a> -->
+        <router-link exact to="/">All</router-link>
       </li>
       <li>
-        <a href="#/active">Active</a>
+        <!-- <a href="#/active">Active</a> -->
+        <router-link to="/active">Active</router-link>
       </li>
       <li>
-        <a href="#/completed">Completed</a>
+        <!-- <a href="#/completed">Completed</a> -->
+        <router-link to="/completed">Completed</router-link>
       </li>
     </ul>
     <!-- Hidden if no completed items are left ↓ -->
