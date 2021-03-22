@@ -24,7 +24,7 @@
       </ul>
     </section>
     <!-- This footer should be hidden by default and shown when there are todos -->
-    <TodoFooter/>
+    <TodoFooter :todos="todos"/>
   </section>
 </template>
 
