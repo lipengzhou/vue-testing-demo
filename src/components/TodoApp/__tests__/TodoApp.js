@@ -8,7 +8,14 @@ describe('TodoApp.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = shallowMount(TodoApp)
+    const $route = {
+      path: '/'
+    }
+    wrapper = shallowMount(TodoApp, {
+      mocks: {
+        $route
+      }
+    })
     const todos = [
       { id: 1, text: 'eat', done: false },
       { id: 2, text: 'play', done: true },
@@ -20,7 +27,6 @@ describe('TodoApp.vue', () => {
   })
 
   test('New todo', async () => {
-    const wrapper = shallowMount(TodoApp)
     const text = 'play'
     wrapper.vm.handleNewTodo(text)
     const todo = wrapper.vm.todos.find(t => t.text === text)
@@ -90,6 +96,34 @@ describe('TodoApp.vue', () => {
     expect(wrapper.vm.todos).toEqual([
       { id: 1, text: 'eat', done: false },
       { id: 3, text: 'sleep', done: false }
+    ])
+  })
+
+  test('Filter Todos', async () => {
+    // 将路由导航到 /，断言 filterTodos = 完成的任务列表
+    wrapper.vm.$route.path = '/'
+    await Vue.nextTick()
+    expect(wrapper.vm.filterTodos).toEqual([
+      { id: 1, text: 'eat', done: false },
+      { id: 2, text: 'play', done: true },
+      { id: 3, text: 'sleep', done: false }
+    ])
+
+    // 将路由导航到 /active
+    // 断言 filterTodos = 所有未完成任务
+    wrapper.vm.$route.path = '/active'
+    await Vue.nextTick()
+    expect(wrapper.vm.filterTodos).toEqual([
+      { id: 1, text: 'eat', done: false },
+      { id: 3, text: 'sleep', done: false }
+    ])
+
+    // 将路由导航到 /completed
+    // 断言 filterTodos = 所有已完成任务
+    wrapper.vm.$route.path = '/completed'
+    await Vue.nextTick()
+    expect(wrapper.vm.filterTodos).toEqual([
+      { id: 2, text: 'play', done: true }
     ])
   })
 })
