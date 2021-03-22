@@ -90,4 +90,8 @@ describe('TodoItem.vue', () => {
     // 验证编辑状态被取消
     expect(wrapper.vm.isEditing).toBeFalsy()
   })
+
+  test('snapshot', () => {
+    expect(wrapper.html()).toMatchSnapshot()
+  })
 })
