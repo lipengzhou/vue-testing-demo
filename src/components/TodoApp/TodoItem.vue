@@ -22,6 +22,7 @@
       data-testid="todo-edit"
       @blur="isEditing = false"
       @keyup.enter="handleEditTodo"
+      @keyup.esc="handleCancelEdit"
     />
   </li>
 </template>
@@ -54,6 +55,10 @@ export default {
         text: e.target.value
       })
       // 取消编辑状态
+      this.isEditing = false
+    },
+
+    handleCancelEdit () {
       this.isEditing = false
     }
   }
