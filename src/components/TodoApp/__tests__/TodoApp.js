@@ -83,4 +83,13 @@ describe('TodoApp.vue', () => {
     await Vue.nextTick()
     expect(toggleAll.element.checked).toBeFalsy()
   })
+
+  test('Clear All Completed', async () => {
+    wrapper.vm.handleClearCompleted()
+    await Vue.nextTick()
+    expect(wrapper.vm.todos).toEqual([
+      { id: 1, text: 'eat', done: false },
+      { id: 3, text: 'sleep', done: false }
+    ])
+  })
 })

@@ -41,7 +41,9 @@ describe('TodoFooter.vue', () => {
     expect(wrapper.find('[data-testid="clear-completed"]').exists()).toBeFalsy()
   })
 
-  test('Clear Completed', () => {
-
+  test('Clear Completed', async () => {
+    const button = wrapper.find('[data-testid="clear-completed"]')
+    await button.trigger('click')
+    expect(wrapper.emitted()['clear-completed']).toBeTruthy()
   })
 })

@@ -24,7 +24,10 @@
       </ul>
     </section>
     <!-- This footer should be hidden by default and shown when there are todos -->
-    <TodoFooter :todos="todos"/>
+    <TodoFooter
+      :todos="todos"
+      @clear-completed="handleClearCompleted"
+    />
   </section>
 </template>
 
@@ -84,6 +87,17 @@ export default {
       }
       // 执行修改操作
       todo.text = text
+    },
+
+    handleClearCompleted () {
+      // 清除所有已完成的任务项
+      for (let i = 0; i < this.todos.length; i++) {
+        if (this.todos[i].done) {
+          // 执行删除操作
+          this.todos.splice(i, 1)
+          i--
+        }
+      }
     }
   }
 }

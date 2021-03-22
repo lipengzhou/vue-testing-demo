@@ -22,6 +22,7 @@
       v-if="isClearCompletedShow"
       class="clear-completed"
       data-testid="clear-completed"
+      @click="$emit('clear-completed')"
     >Clear completed</button>
   </footer>
 </template>
