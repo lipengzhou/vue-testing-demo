@@ -283,3 +283,43 @@ describe('编辑任务', () => {
     expect(todoItem.classes('editing')).toBeFalsy()
   })
 })
+
+describe('删除所有已完成任务', () => {
+  test('如果所有任务已完成，清除按钮应该不展示，否则展示', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: false },
+        { id: 2, text: 'eat', done: false },
+        { id: 3, text: 'sleep', done: false }
+      ]
+    })
+
+    // const clearCompleted = wrapper.find('[data-testid="clear-completed"]')
+    const todoDones = wrapper.findAll('[data-testid="todo-done"]')
+    expect(wrapper.find('[data-testid="clear-completed"]').exists()).toBeFalsy()
+
+    // 设置某个任务变为完成状态
+    await todoDones.at(0).setChecked()
+
+    // 清除按钮应该是展示状态
+    expect(wrapper.find('[data-testid="clear-completed"]').exists()).toBeTruthy()
+  })
+
+  test('点击清除按钮，应该删除所有已完成任务', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: true },
+        { id: 2, text: 'eat', done: false },
+        { id: 3, text: 'sleep', done: true }
+      ]
+    })
+    const clearCompleted = wrapper.find('[data-testid="clear-completed"]')
+    // 点击清除按钮
+    await clearCompleted.trigger('click')
+    // 任务列表应该只剩1个
+    const todoItems = wrapper.findAll('[data-testid="todo-item"]')
+    expect(todoItems.length).toBe(1)
+    expect(todoItems.at(0).text()).toBe('eat')
+    expect(wrapper.find('[data-testid="clear-completed"]').exists()).toBeFalsy()
+  })
+})
