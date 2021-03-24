@@ -19,12 +19,21 @@ beforeEach(async () => {
     localVue,
     router
   })
+
+  // wrapper.findById = (id) => {
+  //   return wrapper.find(`[data-testid="${id}"]`)
+  // }
+
+  // wrapper.findAllById = (id) => {
+  //   return wrapper.findAll(`[data-testid="${id}"]`)
+  // }
 })
 
 describe('添加任务', () => {
   test('在输入框中输入内容敲回车，应该添加任务到列表中', async () => {
     // 找到输入框
-    const input = wrapper.find('input[data-testid="new-todo"]')
+    const input = wrapper.findById('new-todo')
+    // const input = wrapper.find('input[data-testid="new-todo"]')
     // 输入内容
     const text = 'Hello World'
     await input.setValue(text)
@@ -33,8 +42,8 @@ describe('添加任务', () => {
     await input.trigger('keyup.enter')
 
     // 结果：内容被添加到列表中
-    expect(wrapper.find('[data-testid="todo-item"]')).toBeTruthy()
-    expect(wrapper.find('[data-testid="todo-text"]').text()).toBe(text)
+    expect(wrapper.findById('todo-item')).toBeTruthy()
+    expect(wrapper.findById('todo-text').text()).toBe(text)
   })
 
   test('添加任务成功后，输入框内容应该被清空', async () => {
