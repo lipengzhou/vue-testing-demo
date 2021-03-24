@@ -1,6 +1,7 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import TodoApp from '@/components/TodoApp/index.vue'
 import VueRouter from 'vue-router'
+import Vue from 'vue'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)
@@ -72,16 +73,117 @@ describe('删除任务', () => {
   })
 })
 
+describe('切换单个任务完成状态', () => {
+  test('选中任务完成状态按钮，任务的样式变成已完成状态', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: false }
+      ]
+    })
+
+    const todoDone = wrapper.find('[data-testid="todo-done"]')
+    const todoItem = wrapper.find('[data-testid="todo-item"]')
+
+    // 初始未选中
+    expect(todoDone.element.checked).toBeFalsy()
+    // 初始没有完成样式
+    expect(todoItem.classes('completed')).toBeFalsy()
+
+    // 选中任务项的复选框
+    await todoDone.setChecked()
+
+    // 断言结果
+    expect(todoDone.element.checked).toBeTruthy()
+    expect(todoItem.classes('completed')).toBeTruthy()
+  })
+
+  test('取消选中任务完成状态按钮，任务的样式变成未完成状态', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: true }
+      ]
+    })
+
+    const todoDone = wrapper.find('[data-testid="todo-done"]')
+    const todoItem = wrapper.find('[data-testid="todo-item"]')
+
+    expect(todoDone.element.checked).toBeTruthy()
+    expect(todoItem.classes('completed')).toBeTruthy()
+
+    // 选中任务项的复选框
+    await todoDone.setChecked(false)
+
+    // 断言结果
+    expect(todoDone.element.checked).toBeFalsy()
+    expect(todoItem.classes('completed')).toBeFalsy()
+  })
+})
+
 describe('切换所有任务的完成状态', () => {
-  test('选中切换所有按钮，所有的任务应该变成已完成', () => {
+  test('选中切换所有按钮，所有的任务应该变成已完成', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: false },
+        { id: 2, text: 'eat', done: false },
+        { id: 3, text: 'sleep', done: true }
+      ]
+    })
+    const toggleAll = wrapper.find('[data-testid="toggle-all"]')
+    const todoDones = wrapper.findAll('[data-testid="todo-done"]')
 
+    expect(toggleAll.element.checked).toBeFalsy()
+
+    await toggleAll.setChecked()
+
+    for (let i = 0; i < todoDones.length; i++) {
+      expect(todoDones.at(i).element.checked).toBeTruthy()
+    }
   })
 
-  test('取消选中切换所有按钮，所有的任务应该变成未完成', () => {
+  test('取消选中切换所有按钮，所有的任务应该变成未完成', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: true },
+        { id: 2, text: 'eat', done: true },
+        { id: 3, text: 'sleep', done: true }
+      ]
+    })
 
+    const toggleAll = wrapper.find('[data-testid="toggle-all"]')
+    const todoDones = wrapper.findAll('[data-testid="todo-done"]')
+
+    expect(toggleAll.element.checked).toBeTruthy()
+
+    await toggleAll.setChecked(false)
+
+    for (let i = 0; i < todoDones.length; i++) {
+      expect(todoDones.at(i).element.checked).toBeFalsy()
+    }
   })
 
-  test('当所有任务已完成的时候，全选按钮应该被选中，否则不选中', () => {
+  test('当所有任务已完成的时候，全选按钮应该被选中，否则不选中', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: true },
+        { id: 2, text: 'eat', done: false },
+        { id: 3, text: 'sleep', done: false }
+      ]
+    })
+    const toggleAll = wrapper.find('[data-testid="toggle-all"]')
+    const todoDones = wrapper.findAll('[data-testid="todo-done"]')
 
+    expect(toggleAll.element.checked).toBeFalsy()
+
+    for (let i = 0; i < todoDones.length; i++) {
+      todoDones.at(i).setChecked()
+    }
+    await Vue.nextTick()
+    expect(toggleAll.element.checked).toBeTruthy()
+
+    // 取消选中任意任务项
+    await todoDones.at(0).setChecked(false)
+
+    // 全选也应该取消选中
+    expect(toggleAll.element.checked).toBeFalsy()
   })
 })
