@@ -9,15 +9,15 @@
     <ul class="filters">
       <li>
         <!-- <a class="selected" href="#/">All</a> -->
-        <router-link exact to="/">All</router-link>
+        <router-link data-testid="link-all" exact to="/">All</router-link>
       </li>
       <li>
         <!-- <a href="#/active">Active</a> -->
-        <router-link to="/active">Active</router-link>
+        <router-link data-testid="link-active" to="/active">Active</router-link>
       </li>
       <li>
         <!-- <a href="#/completed">Completed</a> -->
-        <router-link to="/completed">Completed</router-link>
+        <router-link data-testid="link-completed" to="/completed">Completed</router-link>
       </li>
     </ul>
     <!-- Hidden if no completed items are left ↓ -->

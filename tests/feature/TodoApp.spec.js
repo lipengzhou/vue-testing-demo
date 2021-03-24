@@ -3,10 +3,12 @@ import TodoApp from '@/components/TodoApp/index.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
+const linkActiveClass = 'selected'
+
 const localVue = createLocalVue()
 localVue.use(VueRouter)
 const router = new VueRouter({
-  linkActiveClass: 'selected'
+  linkActiveClass
 })
 
 /** @type {import('@vue/test-utils').Wrapper} */
@@ -355,5 +357,49 @@ describe('展示剩余任务的数量', () => {
     // 删除任务项，剩余任务数量也应该变化
     await wrapper.find('[data-testid="delete"]').trigger('click')
     expect(doneTodosCount.text()).toBe(getDoneTodosCount().toString())
+  })
+})
+
+describe('数据筛选', () => {
+  const todos = [
+    { id: 1, text: 'play', done: true },
+    { id: 2, text: 'eat', done: false },
+    { id: 3, text: 'sleep', done: true }
+  ]
+
+  const filterTodos = {
+    all: () => todos,
+    active: () => todos.filter(t => !t.done),
+    completed: () => todos.filter(t => t.done)
+  }
+
+  test('点击 all 链接，应该展示所有任务，并且 all 链接应该高亮', async () => {
+    await wrapper.setData({
+      todos
+    })
+    router.push('/')
+    await Vue.nextTick()
+    expect(wrapper.findAll('[data-testid="todo-item"]').length).toBe(filterTodos.all().length)
+    expect(wrapper.find('[data-testid="link-all"]').classes()).toContain(linkActiveClass)
+  })
+
+  test('点击 active 链接，应该展示所有任务，并且 active 链接应该高亮', async () => {
+    await wrapper.setData({
+      todos
+    })
+    router.push('/active')
+    await Vue.nextTick()
+    expect(wrapper.findAll('[data-testid="todo-item"]').length).toBe(filterTodos.active().length)
+    expect(wrapper.find('[data-testid="link-active"]').classes()).toContain(linkActiveClass)
+  })
+
+  test('点击 completed 链接，应该展示所有任务，并且 completed 链接应该高亮', async () => {
+    await wrapper.setData({
+      todos
+    })
+    router.push('/completed')
+    await Vue.nextTick()
+    expect(wrapper.findAll('[data-testid="todo-item"]').length).toBe(filterTodos.completed().length)
+    expect(wrapper.find('[data-testid="link-completed"]').classes()).toContain(linkActiveClass)
   })
 })
