@@ -323,3 +323,37 @@ describe('删除所有已完成任务', () => {
     expect(wrapper.find('[data-testid="clear-completed"]').exists()).toBeFalsy()
   })
 })
+
+describe('展示剩余任务的数量', () => {
+  test('展示所有剩余未完成任务数量', async () => {
+    await wrapper.setData({
+      todos: [
+        { id: 1, text: 'play', done: true },
+        { id: 2, text: 'eat', done: true },
+        { id: 3, text: 'sleep', done: true }
+      ]
+    })
+    const getDoneTodosCount = () => {
+      const dones = wrapper.findAll('[data-testid="todo-done"]')
+      let count = 0
+      for (let i = 0; i < dones.length; i++) {
+        if (!dones.at(i).element.checked) {
+          count++
+        }
+      }
+      return count
+    }
+
+    const doneTodosCount = wrapper.find('[data-testid="done-todos-count"]')
+
+    expect(doneTodosCount.text()).toBe(getDoneTodosCount().toString())
+
+    const dones = wrapper.findAll('[data-testid="todo-done"]')
+    await dones.at(0).setChecked()
+    expect(doneTodosCount.text()).toBe(getDoneTodosCount().toString())
+
+    // 删除任务项，剩余任务数量也应该变化
+    await wrapper.find('[data-testid="delete"]').trigger('click')
+    expect(doneTodosCount.text()).toBe(getDoneTodosCount().toString())
+  })
+})
